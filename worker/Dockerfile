@@ -1,12 +1,18 @@
-FROM node:20-alpine
+FROM node:20-slim
 
-# Install system dependencies: Python, FFmpeg, yt-dlp, and OpenSSL 1.1 for Prisma
-RUN apk add --no-cache \
+# Install system dependencies: Python, FFmpeg, yt-dlp, and required libraries
+RUN apt-get update && apt-get install -y \
     python3 \
-    py3-pip \
+    python3-pip \
     ffmpeg \
-    yt-dlp \
-    openssl1.1-compat
+    wget \
+    openssl \
+    ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install yt-dlp
+RUN wget https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -O /usr/local/bin/yt-dlp \
+    && chmod a+rx /usr/local/bin/yt-dlp
 
 WORKDIR /app
 
