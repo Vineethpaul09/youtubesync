@@ -1,3 +1,8 @@
+// Log immediately to verify script is running
+console.log("========================================");
+console.log("SERVER.JS SCRIPT STARTED");
+console.log("========================================");
+
 import express from "express";
 import path from "path";
 import { fileURLToPath } from "url";
