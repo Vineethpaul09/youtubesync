@@ -74,10 +74,27 @@ initializeWebSocket(io);
 
 const PORT = process.env.PORT || process.env.API_PORT || 3000;
 
-httpServer.listen(Number(PORT), '0.0.0.0', () => {
-  logger.info(`Server running on port ${PORT}`);
-  logger.info(`Environment: ${process.env.NODE_ENV}`);
-  logger.info(`Server listening on 0.0.0.0:${PORT}`);
+// Wrap server startup in try-catch
+try {
+  httpServer.listen(Number(PORT), "0.0.0.0", () => {
+    logger.info(`Server running on port ${PORT}`);
+    logger.info(`Environment: ${process.env.NODE_ENV}`);
+    logger.info(`Server listening on 0.0.0.0:${PORT}`);
+  });
+} catch (error) {
+  logger.error("Failed to start server:", error);
+  process.exit(1);
+}
+
+// Handle uncaught errors
+process.on('uncaughtException', (error) => {
+  logger.error('Uncaught Exception:', error);
+  process.exit(1);
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+  logger.error('Unhandled Rejection at:', promise, 'reason:', reason);
+  process.exit(1);
 });
 
 export { io };
