@@ -6,10 +6,7 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install
 
-# Install serve globally for production serving
-RUN npm install -g serve
-
-# Copy source code
+# Copy source code and server script
 COPY . .
 
 # Build production bundle
@@ -17,5 +14,5 @@ RUN npm run build
 
 EXPOSE 3000
 
-# Serve production build using npm start script
+# Start Express server
 CMD ["npm", "start"]
