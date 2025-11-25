@@ -3,7 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { useAuthStore } from "../store/auth.store";
 import { api, setAuthToken } from "../lib/api";
 import toast from "react-hot-toast";
-import { Film, Mail, Lock, UserPlus, ArrowRight, Loader2 } from "lucide-react";
+import { Film, Mail, Lock, UserPlus, Loader2 } from "lucide-react";
 
 export default function RegisterPage() {
   const navigate = useNavigate();
