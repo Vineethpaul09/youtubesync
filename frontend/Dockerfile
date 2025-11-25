@@ -6,13 +6,16 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install
 
+# Install serve globally for production serving
+RUN npm install -g serve
+
 # Copy source code
 COPY . .
 
 # Build production bundle
 RUN npm run build
 
-EXPOSE 5173
+EXPOSE 3000
 
-# Serve production build with Vite preview on Railway's assigned port
-CMD ["sh", "-c", "npx vite preview --host 0.0.0.0 --port ${PORT:-5173}"]
+# Serve production build with serve package
+CMD ["serve", "-s", "dist", "-l", "3000"]
