@@ -77,7 +77,7 @@ router.get("/:jobId", authenticate, async (req, res, next) => {
 
     return res.json(serializedJob);
   } catch (error) {
-    next(error);
+    return next(error);
   }
 });
 

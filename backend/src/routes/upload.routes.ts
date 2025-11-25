@@ -192,7 +192,12 @@ router.post("/url", authenticate, async (req, res, next) => {
       });
 
       // Sanitize title for filename
-      if (typeof videoInfo === 'object' && videoInfo !== null && 'title' in videoInfo && videoInfo.title) {
+      if (
+        typeof videoInfo === "object" &&
+        videoInfo !== null &&
+        "title" in videoInfo &&
+        videoInfo.title
+      ) {
         videoTitle = String(videoInfo.title)
           .replace(/[<>:"/\\|?*]/g, "") // Remove invalid filename characters
           .replace(/\s+/g, "_") // Replace spaces with underscores
@@ -218,7 +223,7 @@ router.post("/url", authenticate, async (req, res, next) => {
         output: downloadedFilePath,
         format: "best[ext=mp4]/best",
         noWarnings: true,
-        noCheckCertificate: true,
+        noCheckCertificates: true,
         preferFreeFormats: false,
         youtubeSkipDashManifest: true,
         referer: url,

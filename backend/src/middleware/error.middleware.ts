@@ -1,5 +1,5 @@
-import { Request, Response, NextFunction } from 'express';
-import { logger } from '../utils/logger';
+import { Request, Response, NextFunction } from "express";
+import { logger } from "../utils/logger";
 
 export class AppError extends Error {
   constructor(
@@ -19,21 +19,26 @@ export const errorHandler = (
   _next: NextFunction
 ) => {
   if (err instanceof AppError) {
-    logger.error(`${err.statusCode} - ${err.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`);
-    
+    logger.error(
+      `${err.statusCode} - ${err.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`
+    );
+
     return res.status(err.statusCode).json({
-      status: 'error',
-      message: err.message
+      status: "error",
+      message: err.message,
     });
   }
 
-  logger.error(`500 - ${err.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`);
+  logger.error(
+    `500 - ${err.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`
+  );
   logger.error(err.stack);
 
   return res.status(500).json({
-    status: 'error',
-    message: process.env.NODE_ENV === 'production' 
-      ? 'Internal server error' 
-      : err.message
+    status: "error",
+    message:
+      process.env.NODE_ENV === "production"
+        ? "Internal server error"
+        : err.message,
   });
 };
