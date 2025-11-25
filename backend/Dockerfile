@@ -13,11 +13,12 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install
 
-# Copy source code
-COPY . .
-
-# Generate Prisma client
+# Copy Prisma schema and generate client
+COPY prisma ./prisma
 RUN npx prisma generate
+
+# Copy rest of source code
+COPY . .
 
 # Build TypeScript
 RUN npm run build
