@@ -74,9 +74,10 @@ initializeWebSocket(io);
 
 const PORT = process.env.PORT || process.env.API_PORT || 3000;
 
-httpServer.listen(PORT, () => {
+httpServer.listen(Number(PORT), '0.0.0.0', () => {
   logger.info(`Server running on port ${PORT}`);
   logger.info(`Environment: ${process.env.NODE_ENV}`);
+  logger.info(`Server listening on 0.0.0.0:${PORT}`);
 });
 
 export { io };
