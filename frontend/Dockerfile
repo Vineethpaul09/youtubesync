@@ -6,13 +6,16 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install
 
-# Copy source code and server script
+# Copy source code
 COPY . .
 
 # Build production bundle
 RUN npm run build
 
+# Install http-server globally for serving static files
+RUN npm install -g http-server
+
 EXPOSE 3000
 
-# Start Express server directly with node (not npm)
-CMD ["node", "server.js"]
+# Serve dist folder with http-server
+CMD ["http-server", "dist", "-p", "3000", "-a", "0.0.0.0", "--proxy", "http://0.0.0.0:3000?"]
