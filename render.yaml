@@ -1,18 +1,10 @@
 # Render Blueprint for YouTube Sync App
+databases:
+  - name: youtubesync-db
+    databaseName: youtubesync
+    user: youtubesync
+
 services:
-  # PostgreSQL Database
-  - type: pserv
-    name: youtubesync-db
-    plan: free
-
-  # Redis Cache
-  - type: redis
-    name: youtubesync-redis
-    plan: free
-    region: oregon
-    maxmemoryPolicy: allkeys-lru
-    ipAllowList: []
-
   # Backend API
   - type: web
     name: youtubesync-backend
@@ -69,7 +61,7 @@ services:
   # Frontend
   - type: web
     name: youtubesync-frontend
-    env: static
+    runtime: static
     buildCommand: cd frontend && npm install && npm run build
     staticPublishPath: ./frontend/dist
     pullRequestPreviewsEnabled: true
