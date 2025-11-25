@@ -17,5 +17,5 @@ RUN npm install -g http-server
 
 EXPOSE 3000
 
-# Serve dist folder with http-server
-CMD ["http-server", "dist", "-p", "3000", "-a", "0.0.0.0", "--proxy", "http://0.0.0.0:3000?"]
+# Serve dist folder with http-server using Railway's PORT variable
+CMD sh -c "http-server dist -p ${PORT:-3000} -a 0.0.0.0 --proxy http://0.0.0.0:${PORT:-3000}?"
