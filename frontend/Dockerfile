@@ -14,5 +14,5 @@ RUN npm run build
 
 EXPOSE 5173
 
-# Serve production build with Vite preview
-CMD ["npx", "vite", "preview", "--host", "0.0.0.0", "--port", "5173"]
+# Serve production build with Vite preview on Railway's assigned port
+CMD ["sh", "-c", "npx vite preview --host 0.0.0.0 --port ${PORT:-5173}"]
