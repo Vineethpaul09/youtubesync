@@ -1,0 +1,147 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String   @id @default(uuid())
+  email         String   @unique
+  passwordHash  String   @map("password_hash")
+  createdAt     DateTime @default(now()) @map("created_at")
+  lastLogin     DateTime? @map("last_login")
+  tier          String   @default("free")
+  storageUsed   BigInt   @default(0) @map("storage_used")
+  
+  files         File[]
+  jobs          Job[]
+  batchJobs     BatchJob[]
+  
+  @@map("users")
+}
+
+model File {
+  id               String   @id @default(uuid())
+  userId           String   @map("user_id")
+  originalFilename String   @map("original_filename")
+  fileSize         BigInt   @map("file_size")
+  mimeType         String?  @map("mime_type")
+  storagePath      String   @map("storage_path")
+  checksum         String?
+  uploadedAt       DateTime @default(now()) @map("uploaded_at")
+  expiresAt        DateTime? @map("expires_at")
+  status           String   @default("uploaded")
+  
+  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  inputJobs        Job[]    @relation("InputFile")
+  outputJobs       Job[]    @relation("OutputFile")
+  metadata         FileMetadata?
+  
+  @@index([userId])
+  @@index([status])
+  @@index([expiresAt])
+  @@map("files")
+}
+
+model Job {
+  id             String    @id @default(uuid())
+  userId         String    @map("user_id")
+  inputFileId    String    @map("input_file_id")
+  outputFileId   String?   @map("output_file_id")
+  jobType        String    @map("job_type")
+  inputFormat    String?   @map("input_format")
+  outputFormat   String    @map("output_format")
+  qualityPreset  String?   @map("quality_preset")
+  options        Json?
+  status         String    @default("pending")
+  progress       Int       @default(0)
+  workerId       String?   @map("worker_id")
+  errorMessage   String?   @map("error_message")
+  retryCount     Int       @default(0) @map("retry_count")
+  priority       Int       @default(5)
+  createdAt      DateTime  @default(now()) @map("created_at")
+  startedAt      DateTime? @map("started_at")
+  completedAt    DateTime? @map("completed_at")
+  
+  user           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  inputFile      File      @relation("InputFile", fields: [inputFileId], references: [id], onDelete: Cascade)
+  outputFile     File?     @relation("OutputFile", fields: [outputFileId], references: [id], onDelete: SetNull)
+  logs           ProcessingLog[]
+  batchJobItems  BatchJobItem[]
+  
+  @@index([userId])
+  @@index([status])
+  @@index([createdAt])
+  @@index([priority])
+  @@map("jobs")
+}
+
+model FileMetadata {
+  id            String   @id @default(uuid())
+  fileId        String   @unique @map("file_id")
+  title         String?
+  artist        String?
+  album         String?
+  duration      Decimal? @db.Decimal(10, 2)
+  bitrate       Int?
+  sampleRate    Int?     @map("sample_rate")
+  channels      Int?
+  codec         String?
+  resolution    String?
+  frameRate     Decimal? @map("frame_rate") @db.Decimal(5, 2)
+  thumbnailPath String?  @map("thumbnail_path")
+  rawMetadata   Json?    @map("raw_metadata")
+  createdAt     DateTime @default(now()) @map("created_at")
+  
+  file          File     @relation(fields: [fileId], references: [id], onDelete: Cascade)
+  
+  @@index([fileId])
+  @@map("file_metadata")
+}
+
+model BatchJob {
+  id            String    @id @default(uuid())
+  userId        String    @map("user_id")
+  name          String?
+  totalJobs     Int       @default(0) @map("total_jobs")
+  completedJobs Int       @default(0) @map("completed_jobs")
+  failedJobs    Int       @default(0) @map("failed_jobs")
+  status        String    @default("pending")
+  createdAt     DateTime  @default(now()) @map("created_at")
+  completedAt   DateTime? @map("completed_at")
+  
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items         BatchJobItem[]
+  
+  @@index([userId])
+  @@map("batch_jobs")
+}
+
+model BatchJobItem {
+  batchId String @map("batch_id")
+  jobId   String @map("job_id")
+  
+  batch   BatchJob @relation(fields: [batchId], references: [id], onDelete: Cascade)
+  job     Job      @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  
+  @@id([batchId, jobId])
+  @@map("batch_job_items")
+}
+
+model ProcessingLog {
+  id        BigInt   @id @default(autoincrement())
+  jobId     String   @map("job_id")
+  level     String
+  message   String
+  details   Json?
+  timestamp DateTime @default(now())
+  
+  job       Job      @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  
+  @@index([jobId])
+  @@index([timestamp])
+  @@map("processing_logs")
+}
