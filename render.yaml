@@ -3,13 +3,8 @@ services:
   # PostgreSQL Database
   - type: pserv
     name: youtubesync-db
-    env: docker
     plan: free
     region: oregon
-    databases:
-      - name: youtubesync
-        databaseName: youtubesync
-        user: youtubesync
 
   # Redis Cache
   - type: redis
@@ -17,6 +12,7 @@ services:
     plan: free
     region: oregon
     maxmemoryPolicy: allkeys-lru
+    ipAllowList: []
 
   # Backend API
   - type: web
@@ -74,18 +70,12 @@ services:
   # Frontend
   - type: web
     name: youtubesync-frontend
-    runtime: static
-    region: oregon
-    plan: free
+    env: static
     buildCommand: cd frontend && npm install && npm run build
-    staticPublishPath: frontend/dist
+    staticPublishPath: ./frontend/dist
     envVars:
       - key: VITE_API_URL
         fromService:
           name: youtubesync-backend
           type: web
           property: host
-    routes:
-      - type: rewrite
-        source: /*
-        destination: /index.html
