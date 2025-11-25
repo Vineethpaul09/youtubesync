@@ -1,11 +1,12 @@
 FROM node:20-alpine
 
-# Install system dependencies: Python, FFmpeg, and yt-dlp
+# Install system dependencies: Python, FFmpeg, yt-dlp, and OpenSSL 1.1 for Prisma
 RUN apk add --no-cache \
     python3 \
     py3-pip \
     ffmpeg \
-    yt-dlp
+    yt-dlp \
+    openssl1.1-compat
 
 WORKDIR /app
 
