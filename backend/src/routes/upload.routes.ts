@@ -188,13 +188,12 @@ router.post("/url", authenticate, async (req, res, next) => {
       const videoInfo = await youtubedl(url, {
         dumpSingleJson: true,
         noWarnings: true,
-        noCallHome: true,
         skipDownload: true,
       });
 
       // Sanitize title for filename
-      if (videoInfo.title) {
-        videoTitle = videoInfo.title
+      if (typeof videoInfo === 'object' && videoInfo !== null && 'title' in videoInfo && videoInfo.title) {
+        videoTitle = String(videoInfo.title)
           .replace(/[<>:"/\\|?*]/g, "") // Remove invalid filename characters
           .replace(/\s+/g, "_") // Replace spaces with underscores
           .substring(0, 100); // Limit length
@@ -219,7 +218,6 @@ router.post("/url", authenticate, async (req, res, next) => {
         output: downloadedFilePath,
         format: "best[ext=mp4]/best",
         noWarnings: true,
-        noCallHome: true,
         noCheckCertificate: true,
         preferFreeFormats: false,
         youtubeSkipDashManifest: true,
@@ -311,7 +309,7 @@ router.post("/url", authenticate, async (req, res, next) => {
 });
 
 // Get supported formats
-router.get("/formats", (req, res) => {
+router.get("/formats", (_req, res) => {
   res.json({
     audio: ["mp3", "wav", "aac", "flac", "ogg"],
     video: ["mp4", "webm", "mkv"],
