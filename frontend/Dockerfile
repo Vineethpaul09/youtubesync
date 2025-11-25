@@ -17,5 +17,5 @@ RUN npm run build
 
 EXPOSE 3000
 
-# Serve production build with serve package on Railway's PORT
-CMD ["sh", "-c", "serve -s dist -l ${PORT:-3000}"]
+# Serve production build using npm start script
+CMD ["npm", "start"]
