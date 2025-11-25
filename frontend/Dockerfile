@@ -14,5 +14,5 @@ RUN npm run build
 
 EXPOSE 3000
 
-# Start Express server
-CMD ["npm", "start"]
+# Start Express server directly with node (not npm)
+CMD ["node", "server.js"]
