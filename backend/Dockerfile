@@ -34,4 +34,4 @@ EXPOSE 3000
 
 # Run migrations and start production server
 # Use || true for migrate to continue even if no migrations needed
-CMD ["sh", "-c", "npx prisma migrate deploy || echo 'Migration completed or skipped' && node dist/index.js"]
+CMD ["sh", "-c", "npx prisma migrate deploy || echo 'Migration completed or skipped' && node dist/start.js"]
