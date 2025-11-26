@@ -189,7 +189,10 @@ router.post("/url", authenticate, async (req, res, next) => {
         dumpSingleJson: true,
         noWarnings: true,
         skipDownload: true,
-      });
+        geoBypass: true,
+        userAgent:
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+      } as any);
 
       // Sanitize title for filename
       if (
@@ -221,19 +224,25 @@ router.post("/url", authenticate, async (req, res, next) => {
     try {
       await youtubedl(url, {
         output: downloadedFilePath,
-        format: "best[ext=mp4]/best",
+        format: "best[ext=mp4]/bestvideo[ext=mp4]+bestaudio[ext=m4a]/best",
         noWarnings: true,
         noCheckCertificates: true,
-        preferFreeFormats: false,
-        referer: url,
+        geoBypass: true,
         userAgent:
           "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
         addHeader: [
           "Accept:text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
           "Accept-Language:en-us,en;q=0.5",
-          "Sec-Fetch-Mode:navigate",
+          "Accept-Encoding:gzip, deflate",
+          "Connection:keep-alive",
+          "Upgrade-Insecure-Requests:1",
         ],
-        noPlaylist: true,
+        noPlaylist: false, // Allow playlists
+        extractAudio: false,
+        embedSubs: false,
+        allSubs: false,
+        embedThumbnail: false,
+        writeInfoJson: false,
       } as any);
 
       console.log("Video download completed successfully");
