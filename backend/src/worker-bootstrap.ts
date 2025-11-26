@@ -6,7 +6,7 @@ const CONCURRENCY = parseInt(process.env.WORKER_CONCURRENCY || "2");
 
 export function startWorker() {
   // Import worker processor
-  const { processJob } = require("../../worker/src/processors/media.processor");
+  const { processJob } = require("./processors/media.processor");
 
   const jobQueue = new Queue("media-processing", REDIS_URL);
 
