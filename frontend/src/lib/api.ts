@@ -8,7 +8,28 @@ export const api = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
+  withCredentials: true, // Enable sending cookies with requests
 });
+
+// Request interceptor to add token to all requests
+api.interceptors.request.use(
+  (config) => {
+    // Get token from localStorage (Zustand persist stores it here)
+    const authStorage = localStorage.getItem("auth-storage");
+    if (authStorage) {
+      try {
+        const { state } = JSON.parse(authStorage);
+        if (state?.token) {
+          config.headers.Authorization = `Bearer ${state.token}`;
+        }
+      } catch (error) {
+        console.error("Error parsing auth storage:", error);
+      }
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
 
 // Response interceptor to handle 401 errors
 api.interceptors.response.use(
@@ -17,8 +38,10 @@ api.interceptors.response.use(
     if (error.response?.status === 401) {
       // Clear auth data from localStorage
       localStorage.removeItem("auth-storage");
-      // Redirect to login
-      window.location.href = "/login";
+      // Redirect to login only if not already on login/register page
+      if (!window.location.pathname.match(/\/(login|register|$)/)) {
+        window.location.href = "/login";
+      }
     }
     return Promise.reject(error);
   }

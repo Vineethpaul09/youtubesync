@@ -32,11 +32,14 @@ router.post("/register", async (req, res, next) => {
       data: { email, passwordHash },
     });
 
-    const token = jwt.sign(
-      { userId: user.id, email: user.email },
-      process.env.JWT_SECRET || "default-secret",
-      { expiresIn: "24h" }
-    );
+    const jwtSecret = process.env.JWT_SECRET;
+    if (!jwtSecret) {
+      throw new Error("JWT_SECRET environment variable is not set");
+    }
+
+    const token = jwt.sign({ userId: user.id, email: user.email }, jwtSecret, {
+      expiresIn: "24h",
+    });
 
     res.status(201).json({
       user: { id: user.id, email: user.email },
@@ -66,11 +69,14 @@ router.post("/login", async (req, res, next) => {
       data: { lastLogin: new Date() },
     });
 
-    const token = jwt.sign(
-      { userId: user.id, email: user.email },
-      process.env.JWT_SECRET || "default-secret",
-      { expiresIn: "24h" }
-    );
+    const jwtSecret = process.env.JWT_SECRET;
+    if (!jwtSecret) {
+      throw new Error("JWT_SECRET environment variable is not set");
+    }
+
+    const token = jwt.sign({ userId: user.id, email: user.email }, jwtSecret, {
+      expiresIn: "24h",
+    });
 
     res.json({
       user: { id: user.id, email: user.email },

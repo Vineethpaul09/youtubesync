@@ -17,16 +17,45 @@ dotenv.config();
 
 const app = express();
 const httpServer = createServer(app);
+
+// Configure allowed origins
+const allowedOrigins: string[] = [
+  process.env.FRONTEND_URL,
+  process.env.VITE_API_URL,
+  "http://localhost:5173",
+  "http://localhost:5174",
+  "http://localhost:5175",
+].filter((origin): origin is string => Boolean(origin));
+
 const io = new Server(httpServer, {
   cors: {
-    origin: process.env.VITE_API_URL || "http://localhost:5173",
+    origin: allowedOrigins,
     methods: ["GET", "POST"],
+    credentials: true,
   },
 });
 
 // Middleware
-app.use(helmet());
-app.use(cors());
+app.use(
+  helmet({
+    crossOriginResourcePolicy: { policy: "cross-origin" },
+  })
+);
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      // Allow requests with no origin (mobile apps, Postman, etc.)
+      if (!origin) return callback(null, true);
+
+      if (allowedOrigins.includes(origin) || origin.includes(".railway.app")) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true,
+  })
+);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

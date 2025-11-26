@@ -93,51 +93,51 @@ export default function JobsPage() {
   const getStatusIcon = (status: string) => {
     switch (status) {
       case "completed":
-        return <CheckCircle className="w-5 h-5 text-green-500" />;
+        return <CheckCircle className="w-5 h-5 text-green-400" />;
       case "failed":
-        return <XCircle className="w-5 h-5 text-red-500" />;
+        return <XCircle className="w-5 h-5 text-red-400" />;
       case "processing":
-        return <Loader className="w-5 h-5 text-blue-500 animate-spin" />;
+        return <Loader className="w-5 h-5 text-blue-400 animate-spin" />;
       default:
-        return <Clock className="w-5 h-5 text-gray-400" />;
+        return <Clock className="w-5 h-5 text-slate-500" />;
     }
   };
 
   const getStatusColor = (status: string) => {
     switch (status) {
       case "completed":
-        return "bg-green-100 text-green-800";
+        return "bg-green-500/20 text-green-400 border border-green-500/30";
       case "failed":
-        return "bg-red-100 text-red-800";
+        return "bg-red-500/20 text-red-400 border border-red-500/30";
       case "processing":
-        return "bg-blue-100 text-blue-800";
+        return "bg-blue-500/20 text-blue-400 border border-blue-500/30";
       default:
-        return "bg-gray-100 text-gray-800";
+        return "bg-slate-700 text-slate-300 border border-slate-600";
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+    <div className="min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900">
       {/* Header */}
-      <header className="bg-white shadow-sm border-b border-gray-200">
+      <header className="bg-slate-900/50 backdrop-blur-sm border-b border-slate-700 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <Link
-                to="/"
-                className="p-2 text-gray-600 hover:text-indigo-600 hover:bg-gray-100 rounded-lg transition-all"
+                to="/dashboard"
+                className="p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-all"
               >
                 <ArrowLeft className="w-6 h-6" />
               </Link>
               <div className="flex items-center gap-3">
-                <div className="p-2 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-xl">
+                <div className="p-2 bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl">
                   <Film className="w-6 h-6 text-white" />
                 </div>
                 <div>
-                  <h1 className="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+                  <h1 className="text-2xl font-bold text-white">
                     Conversion Jobs
                   </h1>
-                  <p className="text-sm text-gray-600">
+                  <p className="text-sm text-slate-400">
                     Track your file conversions
                   </p>
                 </div>
@@ -145,14 +145,14 @@ export default function JobsPage() {
             </div>
             <button
               onClick={fetchJobs}
-              className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:text-indigo-600 hover:bg-gray-50 rounded-lg transition-all"
+              className="flex items-center gap-2 px-4 py-2 text-sm text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg transition-all"
             >
               <RefreshCw className="w-4 h-4" />
               Refresh
             </button>
           </div>
           {/* Auto-refresh indicator */}
-          <div className="mt-2 text-xs text-gray-500 text-right">
+          <div className="mt-2 text-xs text-slate-500 text-right">
             Auto-refreshing • Last updated: {lastUpdated.toLocaleTimeString()}
           </div>
         </div>
@@ -161,29 +161,27 @@ export default function JobsPage() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {loading ? (
           <div className="text-center py-16">
-            <div className="inline-flex items-center justify-center p-6 bg-white rounded-2xl shadow-lg">
-              <Loader className="w-10 h-10 animate-spin text-indigo-600" />
+            <div className="inline-flex items-center justify-center p-6 bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-2xl shadow-lg">
+              <Loader className="w-10 h-10 animate-spin text-blue-500" />
             </div>
-            <p className="mt-6 text-lg text-gray-600 font-medium">
+            <p className="mt-6 text-lg text-slate-300 font-medium">
               Loading jobs...
             </p>
           </div>
         ) : jobs.length === 0 ? (
-          <div className="text-center py-16 bg-white rounded-2xl shadow-lg">
+          <div className="text-center py-16 bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-2xl shadow-lg">
             <div className="flex justify-center mb-4">
-              <div className="p-6 bg-gray-100 rounded-2xl">
-                <FileCheck className="w-16 h-16 text-gray-400" />
+              <div className="p-6 bg-slate-900/50 rounded-2xl">
+                <FileCheck className="w-16 h-16 text-slate-500" />
               </div>
             </div>
-            <h3 className="text-xl font-bold text-gray-900 mb-2">
-              No jobs yet
-            </h3>
-            <p className="text-gray-600 mb-6">
+            <h3 className="text-xl font-bold text-white mb-2">No jobs yet</h3>
+            <p className="text-slate-400 mb-6">
               Upload some files to get started
             </p>
             <Link
               to="/upload"
-              className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-semibold hover:from-indigo-700 hover:to-purple-700 transition-all transform hover:scale-105 shadow-lg"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition-all transform hover:scale-105 shadow-lg"
             >
               Upload Files
             </Link>
@@ -193,19 +191,19 @@ export default function JobsPage() {
             {jobs.map((job) => (
               <div
                 key={job.id}
-                className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100 hover:shadow-xl transition-all"
+                className="bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-2xl shadow-lg p-6 hover:shadow-xl hover:border-slate-600 transition-all"
               >
                 <div className="flex items-start justify-between gap-4 mb-4">
                   <div className="flex items-start gap-4 flex-1 min-w-0">
                     <div
                       className={`p-3 rounded-xl flex-shrink-0 relative ${
                         job.status === "completed"
-                          ? "bg-green-100"
+                          ? "bg-green-500/20 border border-green-500/30"
                           : job.status === "failed"
-                            ? "bg-red-100"
+                            ? "bg-red-500/20 border border-red-500/30"
                             : job.status === "processing"
-                              ? "bg-blue-100"
-                              : "bg-gray-100"
+                              ? "bg-blue-500/20 border border-blue-500/30"
+                              : "bg-slate-700 border border-slate-600"
                       }`}
                     >
                       {getStatusIcon(job.status)}
@@ -219,7 +217,7 @@ export default function JobsPage() {
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-3 mb-2 flex-wrap">
-                        <h3 className="text-lg font-bold text-gray-900 break-all">
+                        <h3 className="text-lg font-bold text-white break-all">
                           {job.inputFile.originalFilename}
                         </h3>
                         <span
@@ -233,23 +231,23 @@ export default function JobsPage() {
 
                       <div className="grid grid-cols-2 gap-4 text-sm mt-3">
                         <div className="flex items-center gap-2">
-                          <span className="font-semibold text-gray-700">
+                          <span className="font-semibold text-slate-300">
                             Output:
                           </span>
-                          <span className="px-2 py-1 bg-indigo-100 text-indigo-700 rounded font-medium">
+                          <span className="px-2 py-1 bg-blue-500/20 text-blue-400 border border-blue-500/30 rounded font-medium">
                             {job.outputFormat.toUpperCase()}
                           </span>
                         </div>
                         <div className="flex items-center gap-2">
-                          <span className="font-semibold text-gray-700">
+                          <span className="font-semibold text-slate-300">
                             Quality:
                           </span>
-                          <span className="px-2 py-1 bg-purple-100 text-purple-700 rounded font-medium capitalize">
+                          <span className="px-2 py-1 bg-purple-500/20 text-purple-400 border border-purple-500/30 rounded font-medium capitalize">
                             {job.qualityPreset}
                           </span>
                         </div>
-                        <div className="flex items-center gap-2 text-gray-600">
-                          <span className="font-semibold text-gray-700">
+                        <div className="flex items-center gap-2 text-slate-400">
+                          <span className="font-semibold text-slate-300">
                             Size:
                           </span>
                           <span>
@@ -261,8 +259,8 @@ export default function JobsPage() {
                             MB
                           </span>
                         </div>
-                        <div className="flex items-center gap-2 text-gray-600">
-                          <span className="font-semibold text-gray-700">
+                        <div className="flex items-center gap-2 text-slate-400">
+                          <span className="font-semibold text-slate-300">
                             Created:
                           </span>
                           <span>
@@ -276,21 +274,21 @@ export default function JobsPage() {
                         job.status === "pending") && (
                         <div className="mt-4">
                           <div className="flex justify-between items-center mb-2">
-                            <span className="text-xs font-semibold text-gray-600">
+                            <span className="text-xs font-semibold text-slate-400">
                               {job.status === "processing"
                                 ? "Converting..."
                                 : "Queued for processing"}
                             </span>
-                            <span className="text-xs font-semibold text-gray-600">
+                            <span className="text-xs font-semibold text-slate-400">
                               {job.progress}%
                             </span>
                           </div>
-                          <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
+                          <div className="w-full bg-slate-700 rounded-full h-2 overflow-hidden">
                             <div
                               className={`h-full rounded-full transition-all duration-500 ${
                                 job.status === "processing"
-                                  ? "bg-gradient-to-r from-blue-500 to-indigo-600 animate-pulse"
-                                  : "bg-gradient-to-r from-gray-400 to-gray-500"
+                                  ? "bg-gradient-to-r from-blue-500 to-blue-600 animate-pulse"
+                                  : "bg-slate-600"
                               }`}
                               style={{
                                 width: `${job.status === "pending" ? 0 : job.progress}%`,
@@ -312,7 +310,7 @@ export default function JobsPage() {
                             job.outputFile!.originalFilename
                           )
                         }
-                        className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-xl hover:from-green-600 hover:to-green-700 shadow-lg hover:shadow-xl transition-all transform hover:scale-105 font-semibold text-sm whitespace-nowrap"
+                        className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-xl hover:bg-green-700 shadow-lg hover:shadow-xl transition-all transform hover:scale-105 font-semibold text-sm whitespace-nowrap"
                       >
                         <Download className="w-4 h-4" />
                         Download
@@ -321,7 +319,7 @@ export default function JobsPage() {
                     {job.status === "failed" && (
                       <button
                         onClick={() => handleRetry(job.id)}
-                        className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-xl hover:from-orange-600 hover:to-orange-700 shadow-lg hover:shadow-xl transition-all transform hover:scale-105 font-semibold text-sm whitespace-nowrap"
+                        className="flex items-center gap-2 px-4 py-2 bg-orange-600 text-white rounded-xl hover:bg-orange-700 shadow-lg hover:shadow-xl transition-all transform hover:scale-105 font-semibold text-sm whitespace-nowrap"
                       >
                         <RefreshCw className="w-4 h-4" />
                         Retry
@@ -334,16 +332,16 @@ export default function JobsPage() {
                 {job.status === "processing" && (
                   <div className="mt-4">
                     <div className="flex items-center justify-between text-sm mb-2">
-                      <span className="text-gray-600 font-medium">
+                      <span className="text-slate-400 font-medium">
                         Processing...
                       </span>
-                      <span className="font-bold text-indigo-600">
+                      <span className="font-bold text-blue-400">
                         {job.progress}%
                       </span>
                     </div>
-                    <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+                    <div className="w-full bg-slate-700 rounded-full h-3 overflow-hidden">
                       <div
-                        className="bg-gradient-to-r from-indigo-500 to-purple-600 h-3 rounded-full transition-all duration-500 relative"
+                        className="bg-gradient-to-r from-blue-500 to-purple-600 h-3 rounded-full transition-all duration-500 relative"
                         style={{ width: `${job.progress}%` }}
                       >
                         <div className="absolute inset-0 bg-white opacity-30 animate-pulse"></div>
@@ -354,12 +352,12 @@ export default function JobsPage() {
 
                 {/* Error Message */}
                 {job.status === "failed" && job.errorMessage && (
-                  <div className="mt-4 p-4 bg-red-50 border-l-4 border-red-500 rounded-lg">
+                  <div className="mt-4 p-4 bg-red-500/10 border-l-4 border-red-500 rounded-lg">
                     <div className="flex items-start gap-3">
-                      <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
+                      <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
                       <div className="flex-1">
-                        <p className="font-semibold text-red-800 mb-1">Error</p>
-                        <p className="text-sm text-red-700 break-all">
+                        <p className="font-semibold text-red-400 mb-1">Error</p>
+                        <p className="text-sm text-red-300 break-all">
                           {job.errorMessage}
                         </p>
                       </div>
