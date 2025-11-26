@@ -5,40 +5,55 @@ const REDIS_URL = process.env.REDIS_URL || "redis://localhost:6379";
 const CONCURRENCY = parseInt(process.env.WORKER_CONCURRENCY || "2");
 
 export function startWorker() {
-  // Import worker processor
-  const { processJob } = require("./processors/media.processor");
+  try {
+    logger.info("Initializing worker...");
+    logger.info(`Redis URL: ${REDIS_URL}`);
+    logger.info(`Concurrency: ${CONCURRENCY}`);
 
-  const jobQueue = new Queue("media-processing", REDIS_URL);
+    // Import worker processor
+    const { processJob } = require("./processors/media.processor");
+    logger.info("Media processor loaded successfully");
 
-  jobQueue.process(CONCURRENCY, async (job) => {
-    logger.info(`Processing job ${job.id}: ${job.data.jobId}`);
+    const jobQueue = new Queue("media-processing", REDIS_URL);
+    logger.info("Job queue created");
 
-    try {
-      await processJob(job.data);
-      logger.info(`Job ${job.id} completed successfully`);
-    } catch (error) {
-      logger.error(`Job ${job.id} failed:`, error);
-      throw error;
-    }
-  });
+    jobQueue.process(CONCURRENCY, async (job) => {
+      logger.info(`Processing job ${job.id}: ${job.data.jobId}`);
 
-  jobQueue.on("completed", (job) => {
-    logger.info(`Job ${job.id} completed`);
-  });
+      try {
+        await processJob(job.data);
+        logger.info(`Job ${job.id} completed successfully`);
+      } catch (error) {
+        logger.error(`Job ${job.id} failed:`, error);
+        throw error;
+      }
+    });
 
-  jobQueue.on("failed", (job, err) => {
-    logger.error(`Job ${job?.id} failed with error: ${err.message}`);
-  });
+    jobQueue.on("completed", (job) => {
+      logger.info(`Job ${job.id} completed`);
+    });
 
-  jobQueue.on("error", (error) => {
-    logger.error("Queue error:", error);
-  });
+    jobQueue.on("failed", (job, err) => {
+      logger.error(`Job ${job?.id} failed with error: ${err.message}`);
+    });
 
-  logger.info(`Worker started with concurrency: ${CONCURRENCY}`);
-  logger.info(`Connected to Redis: ${REDIS_URL}`);
+    jobQueue.on("error", (error) => {
+      logger.error("Queue error:", error);
+    });
 
-  process.on("SIGTERM", async () => {
-    logger.info("SIGTERM signal received, closing worker");
-    await jobQueue.close();
-  });
+    jobQueue.on("ready", () => {
+      logger.info("Worker is ready to process jobs");
+    });
+
+    logger.info(`✓ Worker started with concurrency: ${CONCURRENCY}`);
+    logger.info(`✓ Connected to Redis: ${REDIS_URL}`);
+
+    process.on("SIGTERM", async () => {
+      logger.info("SIGTERM signal received, closing worker");
+      await jobQueue.close();
+    });
+  } catch (error) {
+    logger.error("Failed to start worker:", error);
+    throw error;
+  }
 }
