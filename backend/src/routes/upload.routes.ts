@@ -225,7 +225,6 @@ router.post("/url", authenticate, async (req, res, next) => {
         noWarnings: true,
         noCheckCertificates: true,
         preferFreeFormats: false,
-        youtubeSkipDashManifest: true,
         referer: url,
       });
 
