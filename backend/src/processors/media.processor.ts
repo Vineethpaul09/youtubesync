@@ -228,7 +228,7 @@ async function extractMetadata(
   filePath: string,
   fileId: string
 ): Promise<void> {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     ffmpeg.ffprobe(filePath, async (err, metadata) => {
       if (err) {
         logger.error("Failed to extract metadata:", err);
