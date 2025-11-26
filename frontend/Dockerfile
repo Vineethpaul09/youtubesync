@@ -9,7 +9,9 @@ RUN npm install
 # Copy source code
 COPY . .
 
-# Build production bundle
+# Build production bundle with environment variables
+ARG VITE_API_URL
+ENV VITE_API_URL=$VITE_API_URL
 RUN npm run build
 
 # Install http-server globally for serving static files
